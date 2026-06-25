@@ -5,8 +5,13 @@ let isInitialized = false;
 
 export const initBackendStorage = async () => {
   if (isInitialized) return storageCache;
+  
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3000);
+
   try {
-    const response = await fetch(`${API_BASE_URL}/items`);
+    const response = await fetch(`${API_BASE_URL}/items`, { signal: controller.signal });
+    clearTimeout(timeoutId);
     if (response.ok) {
       const items = await response.json();
       items.forEach(item => {
@@ -17,6 +22,7 @@ export const initBackendStorage = async () => {
       console.error('❌ Failed to fetch items from backend API. Status:', response.status);
     }
   } catch (error) {
+    clearTimeout(timeoutId);
     console.error('❌ Error initializing backendStorage cache:', error);
   }
   isInitialized = true;
