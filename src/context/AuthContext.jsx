@@ -147,10 +147,20 @@ export const useAccounts = () => useContext(AccountsContext);
 
 export const AuthProvider = ({ children }) => {
   const { receptionists, teacherAccounts, setTeacherAccounts, admins, setAdmins, managers, setManagers } = useAccounts();
-  const [user, setUser] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [students, setStudents] = useState([]);
-  const [teachers, setTeachers] = useState([]);
+  const [user, setUser] = useState(() => {
+    const currentUser = localStorage.getItem('currentUser');
+    return currentUser ? JSON.parse(currentUser) : null;
+  });
+  const [users, setUsers] = useState(() => {
+    const storedUsers = localStorage.getItem('schoolUsers');
+    return storedUsers ? JSON.parse(storedUsers) : [];
+  });
+  const [students, setStudents] = useState(() => {
+    return getAllStudents();
+  });
+  const [teachers, setTeachers] = useState(() => {
+    return getAllTeachers();
+  });
   const [isEditStudentModalOpen, setIsEditStudentModalOpen] = useState(false);
   const [editStudentData, setEditStudentData] = useState(null);
   // Add global state for classes and sections
@@ -162,40 +172,6 @@ export const AuthProvider = ({ children }) => {
     const stored = localStorage.getItem('sections');
     return stored ? JSON.parse(stored) : [];
   });
-
-  // Load users from localStorage on component mount
-  useEffect(() => {
-    const storedUsers = localStorage.getItem('schoolUsers');
-    if (storedUsers) {
-      setUsers(JSON.parse(storedUsers));
-    }
-  }, []);
-
-  // Load students from file storage on component mount
-  useEffect(() => {
-    const loadStudents = () => {
-      const fileStudents = getAllStudents();
-      setStudents(fileStudents);
-    };
-    loadStudents();
-  }, []);
-
-  // Load teachers from file storage on component mount
-  useEffect(() => {
-    const loadTeachers = () => {
-      const fileTeachers = getAllTeachers();
-      setTeachers(fileTeachers);
-    };
-    loadTeachers();
-  }, []);
-
-  // Load current user from localStorage
-  useEffect(() => {
-    const currentUser = localStorage.getItem('currentUser');
-    if (currentUser) {
-      setUser(JSON.parse(currentUser));
-    }
-  }, []);
 
   useEffect(() => {
     localStorage.setItem('classes', JSON.stringify(classes));
