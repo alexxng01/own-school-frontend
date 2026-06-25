@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Mr. David Lee",
+    "subjects": ["Math", "Science"],
+    "classes": ["5A", "5B"]
+  },
+  {
+    "id": 2,
+    "name": "Ms. Sarah Kim",
+    "subjects": ["English"],
+    "classes": ["5A"]
+  }
+] 

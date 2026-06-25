@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Alice Johnson",
+    "class": "5A",
+    "attendance": ["2024-07-01", "2024-07-02", "2024-07-03"],
+    "assignments": [
+      { "title": "Math HW 1", "submitted": true },
+      { "title": "Science Project", "submitted": false }
+    ],
+    "results": [
+      { "subject": "Math", "score": 92 },
+      { "subject": "Science", "score": 88 }
+    ],
+    "feeStatus": "Paid"
+  },
+  {
+    "id": 2,
+    "name": "Bob Smith",
+    "class": "5A",
+    "attendance": ["2024-07-01", "2024-07-03"],
+    "assignments": [
+      { "title": "Math HW 1", "submitted": false },
+      { "title": "Science Project", "submitted": true }
+    ],
+    "results": [
+      { "subject": "Math", "score": 75 },
+      { "subject": "Science", "score": 90 }
+    ],
+    "feeStatus": "Unpaid"
+  }
+] 

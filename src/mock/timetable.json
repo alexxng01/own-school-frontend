@@ -1,0 +1,10 @@
+[
+  {
+    "class": "5A",
+    "schedule": [
+      { "day": "Monday", "subject": "Math", "time": "09:00-10:00" },
+      { "day": "Monday", "subject": "Science", "time": "10:00-11:00" },
+      { "day": "Tuesday", "subject": "English", "time": "09:00-10:00" }
+    ]
+  }
+] 

@@ -1,0 +1,95 @@
+.box {
+  width: 21rem;
+  height: 21rem;
+  background: #171819;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+/* Removed hover scale effect */
+
+.form {
+  position: absolute;
+  inset: 6px;
+  z-index: 60;
+  background: #171819; 
+  border-radius: 6px; 
+}
+
+.box::after {
+  content: "";
+  width: 21rem;
+  height: 21rem;
+  background: linear-gradient(0deg, transparent, #3b82f6, #3b82f6);
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  border-radius: 50%;
+  animation: animate 2s linear infinite; 
+  transform-origin: bottom right;
+}
+
+.box::before {
+  content: "";
+  width: 21rem;
+  height: 21rem;
+  background: linear-gradient(0deg, transparent, #8b5cf6, #8b5cf6);
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  border-radius: 50%;
+  animation: animate 2s linear infinite;
+  transform-origin: bottom right;
+  animation-delay: -1s;
+}
+
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments for smaller profile images */
+.box.small {
+  width: 80px;
+  height: 80px;
+}
+
+.box.small::after,
+.box.small::before {
+  width: 80px;
+  height: 80px;
+}
+.box.small::after,
+.box.small::before {
+  width: 80px;
+  height: 80px;
+}
+.box.small .form {
+  inset: 2px;
+  border-radius: 50%;
+}
+
+/* Extra small for navbar */
+.box.xsmall {
+  width: 50px;
+  height: 50px;
+}
+
+.box.xsmall::after,
+.box.xsmall::before {
+  width: 50px;
+  height: 50px;
+}
+
+.box.xsmall .form {
+  inset: 2px;
+  border-radius: 50%;
+} 
