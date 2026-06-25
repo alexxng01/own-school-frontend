@@ -8,7 +8,6 @@ import {
   Users,
   BookOpen,
   Calendar,
-  ClipboardList,
   FileText,
   Clock,
   CheckCircle,
@@ -19,8 +18,7 @@ import {
   Award,
   Mail,
   Plus,
-  X,
-  Edit
+  X
 } from 'lucide-react';
 
 import { useAccounts, useAuth } from '../context/AuthContext';
@@ -29,7 +27,7 @@ import '../styles/animatedProfile.css';
 
 export function TeacherDashboard() {
   console.log("TeacherDashboard rendered");
-  const { teacherAccounts, setTeacherAccounts, receptionists } = useAccounts();
+  const { teacherAccounts, setTeacherAccounts } = useAccounts();
   const { login, students } = useAuth();
   const [teacherId, setTeacherId] = useState('');
   const [teacherUsername, setTeacherUsername] = useState('');
@@ -72,9 +70,6 @@ export function TeacherDashboard() {
     { date: "Next Week", event: "Exam Week", type: "exam" }
   ];
   const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false);
-  const [attendanceSection, setAttendanceSection] = useState('');
-  const [attendanceSubject, setAttendanceSubject] = useState('');
-  const [attendanceBatch, setAttendanceBatch] = useState('');
   const [attendanceMarking, setAttendanceMarking] = useState({});
   const [attendanceRecords, setAttendanceRecords] = useState([]);
 
@@ -100,8 +95,6 @@ export function TeacherDashboard() {
 
   // Info for dashboard
   const info = teacherInfo || { name: 'Teacher', id: '', email: '', department: '', subject: '' };
-  // Only allow subjects assigned to the teacher
-  const allowedSubjects = info.subject ? [info.subject] : [];
   console.log('Dashboard info:', info);
 
   // Login handler

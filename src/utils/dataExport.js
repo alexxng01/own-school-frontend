@@ -100,9 +100,7 @@ export const createDataFiles = async () => {
       teachers
     };
     
-    // Create data directory if it doesn't exist
-    const dataDir = './data';
-    
+
     // Write individual files
     const studentsBlob = new Blob([JSON.stringify(students, null, 2)], { type: 'application/json' });
     const teachersBlob = new Blob([JSON.stringify(teachers, null, 2)], { type: 'application/json' });
