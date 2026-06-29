@@ -20,27 +20,29 @@ import { AdminAnnouncementPage } from '../components/Announcements';
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const { user } = useAuth();
-  console.log('ProtectedRoute user:', user);
-  
+  console.log('🔍 ProtectedRoute check — user from context:', user, '| allowedRoles:', allowedRoles, '| raw currentUser in localStorage:', window.localStorage.getItem('currentUser'));
+
   if (!user) {
+    console.log('🚪 Redirecting to /login because user is falsy:', user);
     return <Navigate to="/login" replace />;
   }
-  
+
   if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+    console.log('🚪 Redirecting to /login because role mismatch. user.role =', user.role, '| allowedRoles =', allowedRoles);
     return <Navigate to="/login" replace />;
   }
-  
+
   return children;
 };
 
 // Public Route Component (redirects to dashboard if already logged in)
 const PublicRoute = ({ children }) => {
   const { user } = useAuth();
-  
+
   if (user) {
     return <Navigate to={`/${user.role}`} replace />;
   }
-  
+
   return children;
 };
 
@@ -50,7 +52,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
-      
+
       {/* Public Routes */}
       <Route path="/login" element={
         <PublicRoute>
@@ -62,28 +64,28 @@ const AppRoutes = () => {
           <Signup />
         </PublicRoute>
       } />
-      
+
       {/* Protected Profile Route */}
       <Route path="/profile" element={
         <ProtectedRoute>
           <Profile />
         </ProtectedRoute>
       } />
-      
+
       {/* Protected Settings Route */}
       <Route path="/settings" element={
         <ProtectedRoute>
           <Settings />
         </ProtectedRoute>
       } />
-      
+
       {/* Protected Security Route */}
       <Route path="/security" element={
         <ProtectedRoute>
           <Security />
         </ProtectedRoute>
       } />
-      
+
       {/* Protected Dashboard Routes */}
       <Route path="/admin/*" element={
         <ProtectedRoute allowedRoles={['admin']}>
@@ -134,7 +136,7 @@ const AppRoutes = () => {
           <TeacherDashboard />
         </ProtectedRoute>
       } />
-      
+
       <Route path="*" element={
         <div>
           404 Not Found<br />

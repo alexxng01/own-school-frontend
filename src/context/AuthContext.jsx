@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { backendStorage as localStorage } from '../utils/backendStorage';
-import { 
-  getAllStudents, 
-  addStudent as addStudentToFile, 
-  updateStudent as updateStudentInFile, 
+import {
+  getAllStudents,
+  addStudent as addStudentToFile,
+  updateStudent as updateStudentInFile,
   deleteStudent as deleteStudentFromFile,
   getAllTeachers,
   addTeacher as addTeacherToFile,
@@ -30,16 +30,16 @@ export const AccountsProvider = ({ children }) => {
   });
   const [admins, setAdmins] = useState(() => {
     const stored = localStorage.getItem('admins');
-    return stored ? JSON.parse(stored) : [{ 
-      id: 'ADM-2024-001', 
-      name: 'Rahul kumar Mahato', 
+    return stored ? JSON.parse(stored) : [{
+      id: 'ADM-2024-001',
+      name: 'Rahul kumar Mahato',
       email: 'admin@school.com',
       phone: '+977123456789',
       address: 'School Administration Office',
-      role: 'School Administrator', 
-      department: 'Administration', 
-      username: 'Alex', 
-      password: '123456' 
+      role: 'School Administrator',
+      department: 'Administration',
+      username: 'Alex',
+      password: '123456'
     }];
   });
   const [managers, setManagers] = useState(() => {
@@ -122,12 +122,12 @@ export const AccountsProvider = ({ children }) => {
     );
     setManagers(updatedManagers);
   };
-  
+
   return (
-    <AccountsContext.Provider value={{ 
-      receptionists, 
-      setReceptionists, 
-      teacherAccounts, 
+    <AccountsContext.Provider value={{
+      receptionists,
+      setReceptionists,
+      teacherAccounts,
       setTeacherAccounts,
       admins,
       setAdmins,
@@ -148,8 +148,15 @@ export const useAccounts = () => useContext(AccountsContext);
 export const AuthProvider = ({ children }) => {
   const { receptionists, teacherAccounts, setTeacherAccounts, admins, setAdmins, managers, setManagers } = useAccounts();
   const [user, setUser] = useState(() => {
-    const currentUser = localStorage.getItem('currentUser');
-    return currentUser ? JSON.parse(currentUser) : null;
+    try {
+      const currentUser = localStorage.getItem('currentUser');
+      return currentUser ? JSON.parse(currentUser) : null;
+    } catch (e) {
+      // Corrupted/invalid JSON in storage shouldn't crash the app or
+      // silently drop the session - log it and fall back to null.
+      console.error('❌ Failed to parse stored currentUser:', e);
+      return null;
+    }
   });
   const [users, setUsers] = useState(() => {
     const storedUsers = localStorage.getItem('schoolUsers');
@@ -211,7 +218,7 @@ export const AuthProvider = ({ children }) => {
         username: username,
         password: password
       };
-      
+
       const updatedAdmins = [...admins, newAdmin];
       setAdmins(updatedAdmins);
       localStorage.setItem('admins', JSON.stringify(updatedAdmins));
@@ -347,7 +354,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Check standard users
-    const standardUser = users.find(u => 
+    const standardUser = users.find(u =>
       (u.username === username || u.email === username) && u.password === password
     );
     if (standardUser) {
@@ -498,14 +505,14 @@ export const AuthProvider = ({ children }) => {
   const getAllTeacherAccounts = () => teacherAccounts;
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
+    <AuthContext.Provider value={{
+      user,
       setUser,
       users,
       students,
       teachers,
-      login, 
-      logout, 
+      login,
+      logout,
       signup,
       isUserExists,
       addStudent,
@@ -531,52 +538,52 @@ export const AuthProvider = ({ children }) => {
     }}>
       {children}
       {isEditStudentModalOpen && editStudentData && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white  rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold">Edit Student</h3>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setIsEditStudentModalOpen(false)}
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      </div>
-      <form onSubmit={e => {
-        e.preventDefault();
-        updateStudent(editStudentData.id, editStudentData);
-        setIsEditStudentModalOpen(false);
-      }}>
-        <label>Name</label>
-        <input
-          value={editStudentData.name}
-          onChange={e => setEditStudentData({ ...editStudentData, name: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
-        />
-        {/* Repeat for other fields: email, phone, class, etc. */}
-        <label>Email</label>
-        <input
-          value={editStudentData.email}
-          onChange={e => setEditStudentData({ ...editStudentData, email: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
-        />
-        {/* ...add more fields as needed... */}
-        <div className="flex gap-3 mt-6">
-          <Button type="submit" className="flex-1">Save</Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setIsEditStudentModalOpen(false)}
-            className="flex-1"
-          >
-            Cancel
-          </Button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white  rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-semibold">Edit Student</h3>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsEditStudentModalOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <form onSubmit={e => {
+              e.preventDefault();
+              updateStudent(editStudentData.id, editStudentData);
+              setIsEditStudentModalOpen(false);
+            }}>
+              <label>Name</label>
+              <input
+                value={editStudentData.name}
+                onChange={e => setEditStudentData({ ...editStudentData, name: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              />
+              {/* Repeat for other fields: email, phone, class, etc. */}
+              <label>Email</label>
+              <input
+                value={editStudentData.email}
+                onChange={e => setEditStudentData({ ...editStudentData, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              />
+              {/* ...add more fields as needed... */}
+              <div className="flex gap-3 mt-6">
+                <Button type="submit" className="flex-1">Save</Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditStudentModalOpen(false)}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
-    </div>
-  </div>
-)}
+      )}
     </AuthContext.Provider>
   );
 };

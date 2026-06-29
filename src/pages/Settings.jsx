@@ -3,23 +3,23 @@ import { backendStorage as localStorage } from '../utils/backendStorage';
 import DashboardLayout from '../components/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/Card';
 import { Button } from '../components/Button';
-import { 
-  Settings as SettingsIcon, 
-  Bell, 
-  Shield, 
-  User, 
-  Globe, 
+import {
+  Settings as SettingsIcon,
+  Bell,
+  Shield,
+  User,
+  Globe,
   Palette,
   Save,
   Eye,
   EyeOff
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/ThemeProvider';
 
 export default function Settings() {
   const { user, setUser } = useAuth();
-  const { isDarkMode, toggleDarkMode } = useTheme();
+  const { isDarkMode, toggleTheme: toggleDarkMode } = useTheme();
   const [activeSection, setActiveSection] = useState('general');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -73,7 +73,7 @@ export default function Settings() {
   useEffect(() => {
     const refreshUserData = () => {
       if (!user) return;
-      
+
       // Use current user data directly
       setProfileData({
         name: user.name || '',
@@ -155,7 +155,7 @@ export default function Settings() {
     try {
       let userData;
       let userKey;
-      
+
       switch (user.role) {
         case 'admin':
           userData = JSON.parse(localStorage.getItem('admins') || '[]');
@@ -189,9 +189,9 @@ export default function Settings() {
       const userId = user.id || user.studentId;
       const username = user.username;
       const email = user.email;
-      
+
       let found = false;
-      
+
       // Try multiple ways to find the user
       for (let i = 0; i < userData.length; i++) {
         const u = userData[i];
@@ -207,19 +207,19 @@ export default function Settings() {
           break;
         }
       }
-      
+
       // If found, save the updated array
       if (found) {
         localStorage.setItem(userKey, JSON.stringify(userData));
       }
-      
+
     } catch (error) {
       console.log('Could not update role-specific data, but current user was updated:', error);
     }
 
     setIsEditingProfile(false);
     setProfileMessage({ type: 'success', text: 'Profile updated successfully!' });
-    
+
     // Clear success message after 3 seconds
     setTimeout(() => {
       setProfileMessage({ type: '', text: '' });
@@ -255,7 +255,7 @@ export default function Settings() {
     // Get user data based on role
     let userData;
     let userKey;
-    
+
     switch (user.role) {
       case 'admin':
         userData = JSON.parse(localStorage.getItem('admins') || '[]');
@@ -285,7 +285,7 @@ export default function Settings() {
     // Find user and verify current password
     const userId = user.id || user.studentId;
     const userIndex = userData.findIndex(u => (u.id === userId || u.studentId === userId));
-    
+
     if (userIndex === -1) {
       setPasswordMessage({ type: 'error', text: 'User not found!' });
       return;
@@ -313,7 +313,7 @@ export default function Settings() {
     });
 
     setPasswordMessage({ type: 'success', text: 'Password changed successfully!' });
-    
+
     // Clear success message after 3 seconds
     setTimeout(() => {
       setPasswordMessage({ type: '', text: '' });
@@ -349,11 +349,10 @@ export default function Settings() {
                     <button
                       key={section.id}
                       onClick={() => setActiveSection(section.id)}
-                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                        activeSection === section.id
+                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeSection === section.id
                           ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
                           : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                      }`}
+                        }`}
                     >
                       {section.icon}
                       <span>{section.label}</span>
@@ -400,11 +399,10 @@ export default function Settings() {
                         </div>
                       )}
                     </div>
-                    
+
                     {profileMessage.text && (
-                      <div className={`mb-4 p-3 rounded-md text-sm font-medium ${
-                        profileMessage.type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                      }`}>
+                      <div className={`mb-4 p-3 rounded-md text-sm font-medium ${profileMessage.type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                        }`}>
                         {profileMessage.text}
                       </div>
                     )}
@@ -417,11 +415,10 @@ export default function Settings() {
                           value={profileData.name}
                           onChange={(e) => handleProfileChange('name', e.target.value)}
                           disabled={!isEditingProfile}
-                          className={`w-full px-3 py-2 border border-gray-300 rounded-md ${
-                            isEditingProfile 
-                              ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white' 
+                          className={`w-full px-3 py-2 border border-gray-300 rounded-md ${isEditingProfile
+                              ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
                               : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                          }`}
+                            }`}
                         />
                       </div>
                       <div>
@@ -431,11 +428,10 @@ export default function Settings() {
                           value={profileData.email}
                           onChange={(e) => handleProfileChange('email', e.target.value)}
                           disabled={!isEditingProfile}
-                          className={`w-full px-3 py-2 border border-gray-300 rounded-md ${
-                            isEditingProfile 
-                              ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white' 
+                          className={`w-full px-3 py-2 border border-gray-300 rounded-md ${isEditingProfile
+                              ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
                               : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                          }`}
+                            }`}
                         />
                       </div>
                       <div>
@@ -445,11 +441,10 @@ export default function Settings() {
                           value={profileData.phone}
                           onChange={(e) => handleProfileChange('phone', e.target.value)}
                           disabled={!isEditingProfile}
-                          className={`w-full px-3 py-2 border border-gray-300 rounded-md ${
-                            isEditingProfile 
-                              ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white' 
+                          className={`w-full px-3 py-2 border border-gray-300 rounded-md ${isEditingProfile
+                              ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
                               : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                          }`}
+                            }`}
                         />
                       </div>
                       <div>
@@ -462,7 +457,7 @@ export default function Settings() {
                         />
                       </div>
                     </div>
-                    
+
                     <div className="mt-4">
                       <label className="block text-sm font-medium mb-2">Address</label>
                       <textarea
@@ -470,11 +465,10 @@ export default function Settings() {
                         onChange={(e) => handleProfileChange('address', e.target.value)}
                         disabled={!isEditingProfile}
                         rows="3"
-                        className={`w-full px-3 py-2 border border-gray-300 rounded-md ${
-                          isEditingProfile 
-                            ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white' 
+                        className={`w-full px-3 py-2 border border-gray-300 rounded-md ${isEditingProfile
+                            ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
                             : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                        }`}
+                          }`}
                       />
                     </div>
                   </div>
@@ -615,9 +609,8 @@ export default function Settings() {
                       </Button>
                     </form>
                     {passwordMessage.text && (
-                      <div className={`mt-4 p-3 rounded-md text-sm font-medium ${
-                        passwordMessage.type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                      }`}>
+                      <div className={`mt-4 p-3 rounded-md text-sm font-medium ${passwordMessage.type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                        }`}>
                         {passwordMessage.text}
                       </div>
                     )}
@@ -675,4 +668,4 @@ export default function Settings() {
       </div>
     </DashboardLayout>
   );
-} 
+}
